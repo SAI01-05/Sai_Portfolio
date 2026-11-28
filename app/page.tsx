@@ -1,51 +1,50 @@
 import Boot from "@/components/Boot";
-import NeuralBg from "@/components/NeuralBg";
-import TrainDemo from "@/components/TrainDemo";
+import Nav from "@/components/Nav";
+import Hero from "@/components/Hero";
 import Contact from "@/components/Contact";
-import {me,projects,skills,games,roadmap} from "@/data/site";
-const H=({id,t,sub}:{id:string;t:string;sub?:string})=><div id={id} className="scroll-mt-20 pt-20"><h2 className="text-3xl font-bold tracking-tight">{t}</h2>{sub&&<p className="mt-1 max-w-prose text-[color:var(--mut)]">{sub}</p>}</div>;
-const btn="rounded-lg px-4 py-2 font-semibold";
+import {me,projects,skills,games,pipeline} from "@/data/site";
+const ext={target:"_blank",rel:"noopener noreferrer"};
+const st={done:["border-emerald-400/60","text-emerald-300","unlocked"],learning:["border-cyan-400/40","text-cyan-300","training"],next:["opacity-60","text-slate-400","next"]};
+const links=[["Email",me.email,`mailto:${me.email}`],["LinkedIn","in/sai-halwai-179923289",me.linkedin],["GitHub","github.com/SAI01-05",me.github],["Game design portfolio","sai01-05.github.io",me.gamePortfolio]];
+const stack=[["Next.js","https://nextjs.org"],["TypeScript","https://www.typescriptlang.org"],["Tailwind CSS","https://tailwindcss.com"],["Supabase","https://supabase.com"],["Vercel","https://vercel.com"],["GitHub","https://github.com"]];
+function Scene({id,n,t,sub,cls,pat,children}:{id:string;n:string;t:string;sub:string;cls:string;pat:string;children:React.ReactNode}){
+ return <section id={id} className={`scene ${cls} relative isolate overflow-hidden px-5 py-16 sm:py-20`}>
+  <div aria-hidden className="bg-aurora absolute inset-0 -z-10"/>
+  <div aria-hidden className={`${pat} absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]`}/>
+  <div className="mx-auto w-full min-w-0 max-w-5xl">
+   <h2 className="flex items-baseline gap-3 text-3xl font-bold tracking-tight sm:text-4xl"><span className="mono text-base font-normal" style={{color:"rgb(var(--c1))"}}>{n}</span>{t}</h2>
+   <p className="mt-2 max-w-prose text-[color:var(--mut)]">{sub}</p>
+   <div className="mt-8">{children}</div></div></section>;
+}
 export default function Home(){
  return <>
- <Boot/><div className="xp" aria-hidden/>
- <header className="sticky top-0 z-30 border-b border-white/5 bg-[#080b14]/85 backdrop-blur">
-  <nav className="mx-auto flex max-w-5xl items-center gap-5 overflow-x-auto px-5 py-3 text-sm whitespace-nowrap">
-   <a href="#top" className="mono font-bold text-cyan-300">sai.ml</a>
-   {["skills","projects","games","lab","next","contact"].map(s=><a key={s} href={`#${s}`} className="text-[color:var(--mut)] hover:text-white">{s}</a>)}
-   <a href="/resume.pdf" className="ml-auto rounded-md border border-cyan-400/50 px-3 py-1 text-cyan-300">Resume</a></nav></header>
- <main id="top" className="mx-auto max-w-5xl px-5 pb-24">
-  <section className="relative grid min-h-[78vh] items-center overflow-hidden"><NeuralBg/>
-   <div className="relative py-16"><p className="mono text-sm text-cyan-300">Hi, I'm</p>
-    <h1 className="mt-2 text-5xl font-bold leading-[1.05] tracking-tight sm:text-7xl">{me.name}</h1>
-    <p className="mt-4 text-2xl text-violet-300">{me.role} in training</p>
-    <p className="mt-4 max-w-xl text-[color:var(--mut)]">{me.about}</p>
-    <div className="mt-7 flex flex-wrap gap-3"><a href="/resume.pdf" className={`${btn} bg-cyan-400 text-black`}>Download resume</a>
-     <a href="#projects" className={`${btn} border border-white/15`}>See projects</a><a href={me.github} className={`${btn} border border-white/15`}>GitHub</a></div></div></section>
-
-  <H id="skills" t="Skill network" sub="Lit nodes are skills I use now. Dim nodes are what I'm training next."/>
-  <div className="mt-6 flex flex-wrap gap-3">{skills.map(s=><span key={s.n} className={`mono rounded-full border px-4 py-1.5 text-sm ${s.on?"border-cyan-400 text-cyan-300 shadow-[0_0_14px_rgba(34,211,238,.35)]":"border-white/10 text-slate-500"}`}>{s.n}{s.on?"":" (learning)"}</span>)}</div>
-
-  <H id="projects" t="Projects" sub="Each project is a level. Locked levels are still in training."/>
-  <div className="mt-6 grid gap-4 sm:grid-cols-2">{projects.map(p=>
-   <article key={p.title} className={`card p-5 ${p.status==="sample"?"opacity-55":""}`}>
-    <div className="flex items-start justify-between gap-3"><h3 className="text-xl font-semibold">{p.title}</h3>
-     <span className={`mono rounded px-2 py-0.5 text-xs ${p.status==="live"?"bg-emerald-400/15 text-emerald-300":p.status==="built"?"bg-cyan-400/15 text-cyan-300":"bg-white/10 text-slate-400"}`}>{p.status==="live"?"Live":p.status==="built"?"Built":"Locked"}</span></div>
-    <p className="mt-2 text-[color:var(--mut)]">{p.desc}</p>
-    <p className="mono mt-3 text-xs text-slate-400">{p.tech.join(", ")}</p>
-    <div className="mt-4 flex gap-3 text-sm">{p.url&&<a href={p.url} className="text-cyan-300 underline">Live demo</a>}{p.repo&&<a href={p.repo} className="text-cyan-300 underline">Source code</a>}</div></article>)}</div>
-
-  <H id="games" t="Simulation and real-time AI" sub="Unity and C# games where I built enemy AI, physics and game systems. This is the base I'm moving into reinforcement learning from."/>
-  <div className="mt-6 grid gap-4 sm:grid-cols-3">{games.map(([t,d])=><div key={t} className="card p-5"><h3 className="font-semibold">{t}</h3><p className="mt-1 text-sm text-[color:var(--mut)]">{d}</p></div>)}</div>
-
-  <H id="lab" t="Train the model" sub="Move the slider. Too low and it crawls, too high and the loss explodes."/>
-  <div className="mt-6 max-w-xl"><TrainDemo/></div>
-
-  <H id="next" t="Next level: MLOps" sub="My next goal after ML engineering is deployment and pipelines."/>
-  <ul className="mt-6 grid gap-2 sm:grid-cols-2">{roadmap.map(r=><li key={r.n} className={`card px-4 py-3 ${r.on?"border-cyan-400/60":"opacity-55"}`}>{r.on?"Unlocked: ":"Locked: "}{r.n}</li>)}</ul>
-
-  <H id="contact" t="Contact" sub="Open to ML engineer roles and fresher openings."/>
-  <div className="mt-6 grid gap-6 sm:grid-cols-2"><Contact/>
-   <div className="space-y-2"><a className="block text-cyan-300 underline" href={`mailto:${me.email}`}>{me.email}</a>
-    <a className="block text-cyan-300 underline" href={me.linkedin}>LinkedIn</a><a className="block text-cyan-300 underline" href={me.github}>GitHub</a></div></div>
+ <Boot/><div className="xp" aria-hidden/><Nav/>
+ <main className="pt-[var(--hh)]">
+  <Hero/>
+  <Scene id="skills" n="02" t="Skill network" sub="Lit cards are skills I use now. Dim cards are what I'm training next." cls="s-skills" pat="pat-dots">
+   <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">{skills.map(s=><li key={s.n} className={`card min-w-0 px-4 py-4 transition duration-200 hover:-translate-y-0.5 ${s.on?"border-cyan-400/60 shadow-[0_0_22px_rgba(34,211,238,.18)]":"opacity-60"}`}><p className="mono break-words font-semibold">{s.n}</p><p className={`mono mt-1 text-xs ${s.on?"text-cyan-300":"text-slate-400"}`}>{s.on?"unlocked":"training"}</p></li>)}</ul>
+  </Scene>
+  <Scene id="projects" n="03" t="Projects" sub="Each project is a level. Locked levels are still in training." cls="s-projects" pat="pat-grid">
+   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{projects.map((p,i)=>
+    <article key={p.title} className={`card min-w-0 p-5 transition duration-200 hover:-translate-y-0.5 hover:border-violet-400/50 ${i===0?"lg:col-span-2":""} ${p.status==="sample"?"opacity-55":""}`}>
+     <div className="flex items-start justify-between gap-3"><h3 className="text-xl font-semibold">{p.title}</h3>
+      <span className={`mono shrink-0 rounded px-2 py-0.5 text-xs ${p.status==="live"?"bg-emerald-400/15 text-emerald-300":p.status==="built"?"bg-cyan-400/15 text-cyan-300":"bg-white/10 text-slate-400"}`}>{p.status==="live"?"Live":p.status==="built"?"Built":"Locked"}</span></div>
+     <p className="mt-2 text-[color:var(--mut)]">{p.desc}</p><p className="mono mt-3 text-xs text-slate-400">{p.tech.join(", ")}</p>
+     <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">{p.url&&<a href={p.url} {...ext} className="text-cyan-300 underline">Live demo</a>}{p.repo&&<a href={p.repo} {...ext} className="text-cyan-300 underline">Source code</a>}{!p.repo&&p.status!=="sample"&&<span className="mono text-xs text-slate-400">source link: coming soon</span>}</div></article>)}</div>
+   <h3 className="mono mt-10 text-sm text-slate-400">Simulation and real-time AI (Unity, C#)</h3>
+   <div className="mt-3 grid gap-3 sm:grid-cols-3">{games.map(([t,d,r])=><div key={t} className="card min-w-0 p-4"><p className="font-semibold">{t}</p><p className="mt-1 text-sm text-[color:var(--mut)]">{d}</p>{r&&<a href={r} {...ext} className="mt-2 inline-block text-sm text-cyan-300 underline">Source code</a>}</div>)}</div>
+  </Scene>
+  <Scene id="next" n="04" t="Next level: MLOps" sub="The ML lifecycle I'm building toward, from data to monitoring. Green stages are done, cyan are in training." cls="s-next" pat="pat-diag">
+   <ol className="pipe grid gap-3 sm:grid-cols-2 lg:grid-cols-6">{pipeline.map((p,i)=>{const [b,c,l]=st[p.s as keyof typeof st];return <li key={p.n} className={`card relative min-w-0 p-4 ${b}`}><span className="mono text-xs text-slate-400">{String(i+1).padStart(2,"0")}</span><p className="mt-1 font-semibold">{p.n}</p><p className="mono mt-1 text-xs text-slate-400">{p.tools}</p><p className={`mono mt-3 text-xs ${c}`}>{l}</p></li>})}</ol>
+   <div className="card mt-6 p-5"><p className="mono text-xs text-emerald-300">Current focus</p><p className="mt-1">Building models in ML, deep learning and NLP. Next: wrap a trained model in an API, containerise it with Docker and deploy it with a pipeline.</p></div>
+  </Scene>
+  <Scene id="contact" n="05" t="Contact" sub="Open to ML engineer roles and fresher openings. Reach me anywhere below." cls="s-contact" pat="pat-big">
+   <div className="grid gap-6 lg:grid-cols-5">
+    <div className="grid min-w-0 content-start gap-3 sm:grid-cols-2 lg:col-span-2 lg:grid-cols-1">{links.map(([k,v,h])=><a key={k} href={h} {...(h.startsWith("mailto")?{}:ext)} className="card block px-4 py-3 transition duration-200 hover:-translate-y-0.5 hover:border-amber-400/50"><span className="mono block text-xs text-slate-400">{k}</span><span className="break-words">{v}</span></a>)}</div>
+    <div className="min-w-0 lg:col-span-3"><Contact/></div></div>
+   <div className="mt-12 border-t border-white/10 pt-6"><p className="mono text-xs text-slate-400">How this site is built</p>
+    <ul className="mt-3 flex flex-wrap gap-2">{stack.map(([k,h])=><li key={k}><a href={h} {...ext} className="mono block rounded-full border border-white/15 px-3 py-1 text-xs text-slate-300 transition hover:border-amber-400/60 hover:text-white">{k}</a></li>)}</ul>
+    <p className="mono mt-4 text-xs text-slate-400">Code on GitHub, hosted on Vercel, messages stored in Supabase. {me.name}.</p></div>
+  </Scene>
  </main></>;
 }
